@@ -1,6 +1,7 @@
 package com.germaniumhq.drivers;
 
 import com.germaniumhq.EnsureDriver;
+import cucumber.api.java.After;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import org.apache.log4j.Logger;
@@ -15,14 +16,17 @@ import static org.junit.Assert.assertTrue;
 public class OpenBrowserSteps {
     private final static Logger log = Logger.getLogger(OpenBrowserSteps.class);
 
+    @After
+    public void kill_browser() {
+        driver().quit();
+    }
+
     @Given("^I open Firefox$")
     public void i_open_Firefox() throws Throwable {
         String driverPath = EnsureDriver.ensureDriver("firefox");
+        System.setProperty("webdriver.gecko.driver", driverPath);
 
-        DesiredCapabilities firefoxCapabilities = DesiredCapabilities.firefox();
-        firefoxCapabilities.setCapability(FirefoxDriver.BINARY, driverPath);
-
-        driver(new FirefoxDriver(firefoxCapabilities));
+        driver(new FirefoxDriver());
     }
 
     @Given("^I go to google$")
@@ -49,13 +53,13 @@ public class OpenBrowserSteps {
         driver(new InternetExplorerDriver());
     }
 
-    private WebDriver driver(WebDriver webDriver) {
+    private static WebDriver driver(WebDriver webDriver) {
         Context.set("driver", webDriver);
 
         return webDriver;
     }
 
-    private WebDriver driver() {
+    private static WebDriver driver() {
         return Context.get("driver");
     }
 }

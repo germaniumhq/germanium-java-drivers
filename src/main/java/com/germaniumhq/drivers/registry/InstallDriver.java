@@ -1,4 +1,4 @@
-package com.germaniumhq.driver;
+package com.germaniumhq.drivers.registry;
 
 import com.germaniumhq.drivers.platform.OperatingSystem;
 import com.germaniumhq.drivers.platform.Platform;

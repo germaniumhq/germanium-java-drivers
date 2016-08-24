@@ -1,4 +1,4 @@
-package com.germaniumhq.driver;
+package com.germaniumhq.drivers.registry;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.io.FileInputStream;

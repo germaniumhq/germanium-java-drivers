@@ -1,9 +1,9 @@
 package com.germaniumhq;
 
-import com.germaniumhq.driver.AvailableDriver;
-import com.germaniumhq.driver.ConfigurableSettings;
-import com.germaniumhq.driver.DriverRegistry;
-import com.germaniumhq.driver.InstallDriver;
+import com.germaniumhq.drivers.registry.AvailableDriver;
+import com.germaniumhq.drivers.registry.ConfigurableSettings;
+import com.germaniumhq.drivers.registry.DriverRegistry;
+import com.germaniumhq.drivers.registry.InstallDriver;
 import com.germaniumhq.drivers.platform.Platform;
 import com.germaniumhq.drivers.platform.PlatformDetector;
 import org.apache.log4j.Logger;
