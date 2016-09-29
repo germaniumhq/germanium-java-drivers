@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -49,7 +50,7 @@ public class InstallDriver {
         InputStream inputStream = InstallDriver.class.getResourceAsStream("/" + internalDriverPath);
 
         try {
-            Files.copy(inputStream, Paths.get(fullPathToDriver));
+            Files.copy(inputStream, Paths.get(fullPathToDriver), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
             throw new IllegalArgumentException(String.format(
                     "Unable to copy driver for platform %s, browser %s, to %s.",
