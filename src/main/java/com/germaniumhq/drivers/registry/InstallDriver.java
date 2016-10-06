@@ -47,9 +47,7 @@ public class InstallDriver {
             return fullPathToDriver;
         }
 
-        InputStream inputStream = InstallDriver.class.getResourceAsStream("/" + internalDriverPath);
-
-        try {
+        try (InputStream inputStream = InstallDriver.class.getResourceAsStream("/" + internalDriverPath)) {
             Files.copy(inputStream, Paths.get(fullPathToDriver), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
             throw new IllegalArgumentException(String.format(
