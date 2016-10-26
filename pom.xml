@@ -8,6 +8,10 @@
     <artifactId>binary-drivers</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
+    <properties>
+        <selenium.version>3.0.1</selenium.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>log4j</groupId>
@@ -19,7 +23,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>3.0.0-beta2</version>
+            <version>${selenium.version}</version>
             <scope>test</scope>
         </dependency>
 
