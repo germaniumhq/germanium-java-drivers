@@ -8,9 +8,13 @@ import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
+
+import java.io.File;
 
 import static org.junit.Assert.assertTrue;
 
@@ -35,7 +39,13 @@ public class OpenBrowserSteps {
     public void i_open_Edge() throws Throwable {
         String driverPath = EnsureDriver.ensureDriver("edge");
 
-        WebDriver webDriver = new EdgeDriver();
+        EdgeDriverService service = new EdgeDriverService.Builder()
+                         .usingDriverExecutable(new File(driverPath))
+                         .usingAnyFreePort()
+                         .build();
+
+        WebDriver webDriver = new EdgeDriver(service);
+
         Context.set("driver", webDriver);
     }
 
@@ -50,8 +60,15 @@ public class OpenBrowserSteps {
 
     @Given("^I open IE$")
     public void i_open_IE() throws Throwable {
-        EnsureDriver.ensureDriver("ie");
-        WebDriver webDriver = new InternetExplorerDriver();
+        String driverPath = EnsureDriver.ensureDriver("ie");
+
+        InternetExplorerDriverService service = new InternetExplorerDriverService.Builder()
+                .usingDriverExecutable(new File(driverPath))
+                .usingAnyFreePort()
+                .build();
+
+        WebDriver webDriver = new InternetExplorerDriver(service);
+
         Context.set("driver", webDriver);
     }
 
