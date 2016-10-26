@@ -3,22 +3,31 @@ package com.germaniumhq.drivers.registry;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 
 public class ShaHash {
     public static String shaFile(String path) {
         try {
-            InputStream fileInputStream = new FileInputStream(path);
-            return shaInputStream(fileInputStream);
-        } catch (FileNotFoundException e) {
-            return "MISSING_FILE";
+            try (InputStream fileInputStream = new FileInputStream(path)) {
+                return shaInputStream(fileInputStream);
+            } catch (FileNotFoundException e) {
+                return "MISSING_FILE";
+            }
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Failure reading file at: " + path);
         }
     }
 
     public static String shaClassPath(String path) {
-        InputStream inputStream = ShaHash.class.getResourceAsStream("/" + path);
-        return shaInputStream(inputStream);
+        try {
+            try (InputStream inputStream = ShaHash.class.getResourceAsStream("/" + path)) {
+                return shaInputStream(inputStream);
+            }
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Failure reading file at: " + path);
+        }
     }
 
     private static String shaInputStream(InputStream inputStream) {
