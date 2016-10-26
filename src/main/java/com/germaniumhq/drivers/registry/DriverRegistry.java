@@ -26,10 +26,12 @@ public class DriverRegistry {
         } else if (platform.getOperatingSystem() == OperatingSystem.WINDOWS) {
             if ("chrome".equalsIgnoreCase(browser)) {
                 return "chromedriver.exe";
-            } else if ("firefox".equals(browser)) {
+            } else if ("firefox".equalsIgnoreCase(browser)) {
                 return "wires.exe";
-            } else if ("ie".equals(browser)) {
+            } else if ("ie".equalsIgnoreCase(browser)) {
                 return "IEDriverServer.exe";
+            } else if ("edge".equalsIgnoreCase(browser)) {
+                return "MicrosoftWebDriver.exe";
             } else {
                 return null;
             }
@@ -75,24 +77,33 @@ public class DriverRegistry {
                     return "binary/ie/win/64/IEDriverServer.exe";
                 }
             }
+        } else if ("edge".equalsIgnoreCase(browser)) {
+            return "https://download.microsoft.com/download/3/2/D/32D3E464-F2EF-490F-841B-05D53C848D15/MicrosoftWebDriver.exe";
         }
 
         return raiseUnknownBrowser(platform, browser);
     }
 
     public static boolean isDriverUpToDate(Platform platform, String browser, AvailableDriver availableDriver) {
-        String internalDriverPath = getInternalDriverPath(platform, browser);
-        String internalDriverSum = ShaHash.shaClassPath(internalDriverPath);
+        String internalDriverSum = getInternalDriverSha1(platform, browser);
 
         return internalDriverSum.equals(availableDriver.getSha1Hash());
     }
 
     public static boolean isDriverUpToDate(Platform platform, String browser, String driverPath) {
         String availableDriverSum = ShaHash.shaFile(driverPath);
-        String internalDriverPath = getInternalDriverPath(platform, browser);
-        String internalDriverSum = ShaHash.shaClassPath(internalDriverPath);
+        String internalDriverSum = getInternalDriverSha1(platform, browser);
 
         return availableDriverSum.equals(internalDriverSum);
+    }
+
+    private static String getInternalDriverSha1(Platform platform, String browser) {
+        if ("edge".equalsIgnoreCase(browser)) {
+            return "6f9e81e5f60fa3e8dccba15a3715ba20d44d0775";
+        }
+
+        String internalDriverPath = getInternalDriverPath(platform, browser);
+        return ShaHash.shaClassPath(internalDriverPath);
     }
 
     private static String raiseUnknownBrowser(Platform platform, String browser) {

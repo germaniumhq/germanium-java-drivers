@@ -6,6 +6,7 @@ import com.germaniumhq.drivers.platform.Platform;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -16,7 +17,15 @@ import java.util.HashSet;
 public class InstallDriver {
     public static String installDriver(Platform platform, String browser) {
         String driverName = DriverRegistry.getDriverName(platform, browser);
-        String internalDriverPath = DriverRegistry.getInternalDriverPath(platform, browser);
+
+        if (driverName == null) {
+            throw new IllegalArgumentException(String.format(
+                    "Unsupported Platform/Browser combination. '%s', " +
+                    "browser: '%s'." ,
+                    platform,
+                    browser));
+        }
+
         String driversFolderLocation = ConfigurableSettings.getGermaniumDriversFolder();
 
         File driversFolderFile = new File(driversFolderLocation);
@@ -47,7 +56,8 @@ public class InstallDriver {
             return fullPathToDriver;
         }
 
-        try (InputStream inputStream = InstallDriver.class.getResourceAsStream("/" + internalDriverPath)) {
+        String internalDriverPath = DriverRegistry.getInternalDriverPath(platform, browser);
+        try (InputStream inputStream = loadData(internalDriverPath)) {
             Files.copy(inputStream, Paths.get(fullPathToDriver), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
             throw new IllegalArgumentException(String.format(
@@ -78,4 +88,34 @@ public class InstallDriver {
 
         return fullPathToDriver;
     }
+
+    private static InputStream loadData(String pathOrUrl) {
+        if (pathOrUrl.startsWith("http://") || pathOrUrl.startsWith("https://")) {
+            validateLicenseAgreement();
+            try {
+                return new URL(pathOrUrl).openStream();
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Unable to open URL: " + pathOrUrl, e);
+            }
+        }
+
+        return InstallDriver.class.getResourceAsStream("/" + pathOrUrl);
+    }
+
+    private static void validateLicenseAgreement() {
+        if (ConfigurableSettings.isMsEdgeLicenseAgreed()) {
+            return;
+        }
+
+        throw new IllegalStateException(
+                "In order to use Edge, you need to first read the EULA from " +
+                "https://az813057.vo.msecnd.net/eulas/webdriver-eula.pdf . If " +
+                "you agree with it, you can either: 1. export GERMANIUM_I_AGREE_TO_MS_EDGE_LICENSE " +
+                "into the environment, or 2. call germaniumdrivers.i_agree_to_ms_edge_license(). " +
+                "Afterwards Germanium will download the drivers for you automatically. By default the " +
+                "download will be in a temporary file, but you can configure the location using the " +
+                "GERMANIUM_DRIVERS_FOLDER environment variable."
+        );
+    }
 }
+

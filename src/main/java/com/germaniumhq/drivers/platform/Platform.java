@@ -24,4 +24,12 @@ public class Platform {
     public void setBitArchitecture(BitArchitecture bitArchitecture) {
         this.bitArchitecture = bitArchitecture;
     }
+
+    @Override
+    public String toString() {
+        return "Platform{" +
+                "operatingSystem=" + operatingSystem +
+                ", bitArchitecture=" + bitArchitecture +
+                '}';
+    }
 }
