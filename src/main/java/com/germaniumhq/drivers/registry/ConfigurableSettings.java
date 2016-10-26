@@ -3,6 +3,8 @@ package com.germaniumhq.drivers.registry;
 import java.io.File;
 
 public class ConfigurableSettings {
+    private static boolean MS_EDGE_LICENSE_AGREED;
+
     public static boolean isGermaniumUseIeDriverForPlatform() {
         return System.getenv("GERMANIUM_USE_IE_DRIVER_FOR_PLATFORM") != null;
     }
@@ -20,5 +22,14 @@ public class ConfigurableSettings {
         }
 
         return germaniumDriversFolder;
+    }
+
+    public static boolean isMsEdgeLicenseAgreed() {
+        return MS_EDGE_LICENSE_AGREED ||
+               System.getenv("GERMANIUM_I_AGREE_TO_MS_EDGE_LICENSE") != null;
+    }
+
+    public static void iAgreeToMsEdgeLicense() {
+        MS_EDGE_LICENSE_AGREED = true;
     }
 }

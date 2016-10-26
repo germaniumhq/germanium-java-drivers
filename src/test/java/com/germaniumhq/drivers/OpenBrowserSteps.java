@@ -7,6 +7,7 @@ import cucumber.api.java.en.Then;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -26,7 +27,32 @@ public class OpenBrowserSteps {
         String driverPath = EnsureDriver.ensureDriver("firefox");
         System.setProperty("webdriver.gecko.driver", driverPath);
 
-        driver(new FirefoxDriver());
+        WebDriver webDriver = new FirefoxDriver();
+        Context.set("driver", webDriver);
+    }
+
+    @Given("^I open Edge$")
+    public void i_open_Edge() throws Throwable {
+        String driverPath = EnsureDriver.ensureDriver("edge");
+
+        WebDriver webDriver = new EdgeDriver();
+        Context.set("driver", webDriver);
+    }
+
+    @Given("^I open Chrome$")
+    public void i_open_Chrome() throws Throwable {
+        String driverPath = EnsureDriver.ensureDriver("chrome");
+        System.setProperty("webdriver.chrome.driver", driverPath);
+
+        WebDriver webDriver = new ChromeDriver(DesiredCapabilities.chrome());
+        Context.set("driver", webDriver);
+    }
+
+    @Given("^I open IE$")
+    public void i_open_IE() throws Throwable {
+        EnsureDriver.ensureDriver("ie");
+        WebDriver webDriver = new InternetExplorerDriver();
+        Context.set("driver", webDriver);
     }
 
     @Given("^I go to google$")
@@ -37,26 +63,6 @@ public class OpenBrowserSteps {
     @Then("^the title is \"([^\"]*)\"$")
     public void the_title_is(String arg1) throws Throwable {
         assertTrue(driver().getTitle().contains(arg1));
-    }
-
-    @Given("^I open Chrome$")
-    public void i_open_Chrome() throws Throwable {
-        String driverPath = EnsureDriver.ensureDriver("chrome");
-        System.setProperty("webdriver.chrome.driver", driverPath);
-
-        driver(new ChromeDriver(DesiredCapabilities.chrome()));
-    }
-
-    @Given("^I open IE$")
-    public void i_open_IE() throws Throwable {
-        EnsureDriver.ensureDriver("ie");
-        driver(new InternetExplorerDriver());
-    }
-
-    private static WebDriver driver(WebDriver webDriver) {
-        Context.set("driver", webDriver);
-
-        return webDriver;
     }
 
     private static WebDriver driver() {

@@ -14,13 +14,13 @@ public class AvailableDriver {
     }
 
     /* Scans the path if an available driver exists for the given
-             * platform and browser. If it doesn't will return null. If it
-             * does, it will return an available driver that points to the
-             * path of the driver.
-             * @param platform
-             * @param browser
-             * @return
-             */
+     * platform and browser. If it doesn't will return null. If it
+     * does, it will return an available driver that points to the
+     * path of the driver.
+     * @param platform
+     * @param browser
+     * @return
+     */
     public static AvailableDriver getAvailableDriverFromPath(Platform platform, String browser) {
         String searchedName = DriverRegistry.getDriverName(platform, browser);
 
