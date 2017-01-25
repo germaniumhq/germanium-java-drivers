@@ -1,7 +1,7 @@
 germanium-drivers:
   version: parent:../germaniumdrivers/@germaniumdrivers
   files:
-    pom.xml: (<groupId>com.germaniumhq</groupId>\s*<artifactId>binary-drivers</artifactId>\s*<version>)(.*?)(</version>)
+    pom.xml: maven:com.germaniumhq:binary-drivers
 
 selenium:
   version: 3.0.1
