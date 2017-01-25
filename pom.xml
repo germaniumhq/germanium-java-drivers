@@ -6,10 +6,9 @@
 
     <groupId>com.germaniumhq</groupId>
     <artifactId>binary-drivers</artifactId>
-    <version>${germanium.binary.version}</version>
+    <version>1.10.5</version>
 
     <properties>
-        <germanium.binary.version>1.10.5</germanium.binary.version>
         <selenium.version>3.0.1</selenium.version>
     </properties>
 
@@ -55,6 +54,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
