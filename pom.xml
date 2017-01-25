@@ -6,9 +6,10 @@
 
     <groupId>com.germaniumhq</groupId>
     <artifactId>binary-drivers</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>${germanium.binary.version}</version>
 
     <properties>
+        <germanium.binary.version>1.10.5</germanium.binary.version>
         <selenium.version>3.0.1</selenium.version>
     </properties>
 

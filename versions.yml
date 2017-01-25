@@ -1,0 +1,10 @@
+germanium-drivers:
+  version: parent:../germaniumdrivers/@germaniumdrivers
+  files:
+    pom.xml: <germanium.binary.version>**VERSION**</germanium.binary.version>
+
+selenium:
+  version: 3.0.1
+  files:
+    pom.xml: <selenium.version>**VERSION**</selenium.version>
+
