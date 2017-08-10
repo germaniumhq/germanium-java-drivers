@@ -19,9 +19,6 @@ RUN cd /tmp && \
 #======================================
 RUN apt install -y firefox
 
-COPY scripts /scripts
-RUN chmod +x /scripts/*.sh
-
 USER ciplogic
 
 RUN curl -s "https://get.sdkman.io" | bash && \
@@ -29,5 +26,10 @@ RUN curl -s "https://get.sdkman.io" | bash && \
     bash -c -l "sdk install maven" && \
     bash -c -l "sdk install java"
 
-CMD /scripts/run-build.sh
+USER root
+COPY scripts /scripts
+RUN chmod +x /scripts/*.sh
+
+USER ciplogic
+CMD /scripts/test-drivers.sh
 
