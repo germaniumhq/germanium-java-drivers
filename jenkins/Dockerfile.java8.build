@@ -27,10 +27,10 @@ RUN curl -s "https://get.sdkman.io" | bash && \
     bash -c -l "sdk install java"
 
 USER root
+RUN apt-get update -y && apt install -y git
+
 COPY scripts /scripts
 RUN chmod +x /scripts/*.sh
-
-RUN apt-get update -y && apt install -y git
 
 USER ciplogic
 CMD /scripts/test-drivers.sh
