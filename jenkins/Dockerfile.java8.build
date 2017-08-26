@@ -30,6 +30,8 @@ USER root
 COPY scripts /scripts
 RUN chmod +x /scripts/*.sh
 
+RUN apt install -y git
+
 USER ciplogic
 CMD /scripts/test-drivers.sh
 
