@@ -24,10 +24,12 @@ function activate_proxy() {
 deactivate_proxy
 
 # we checkout the sources of the project
-# we checkout the sources of the project
+echo git clone --recursive $SOURCES_URL /tmp/project
 git clone --recursive $SOURCES_URL /tmp/project
 
-source "/home/ciplogic/.sdkman/bin/sdkman-init.sh"
+echo . /home/ciplogic/.sdkman/bin/sdkman-init.sh
+. /home/ciplogic/.sdkman/bin/sdkman-init.sh
+echo cp /scripts/settings.xml /home/ciplogic/.m2/settings.xml
 cp /scripts/settings.xml /home/ciplogic/.m2/settings.xml
 
 cd /tmp/project
