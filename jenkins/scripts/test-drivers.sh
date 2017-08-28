@@ -29,6 +29,7 @@ git clone --recursive $SOURCES_URL /tmp/project
 
 echo . /home/ciplogic/.sdkman/bin/sdkman-init.sh
 . /home/ciplogic/.sdkman/bin/sdkman-init.sh
+
 echo cp /scripts/settings.xml /home/ciplogic/.m2/settings.xml
 cp /scripts/settings.xml /home/ciplogic/.m2/settings.xml
 
