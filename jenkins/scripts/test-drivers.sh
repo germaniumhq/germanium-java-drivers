@@ -37,5 +37,6 @@ echo cp /scripts/settings.xml /home/ciplogic/.m2/settings.xml
 cp /scripts/settings.xml /home/ciplogic/.m2/settings.xml
 
 cd /tmp/project
+bin/download-drivers.sh
 mvn clean install
 
