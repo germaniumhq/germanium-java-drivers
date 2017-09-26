@@ -9,7 +9,7 @@ set -e
 GERMANIUM_BINARIES_FOLDER="$GERMANIUM_FOLDER/src/main/resources/binary"
 
 rm -fr $GERMANIUM_BINARIES_FOLDER
-mkdir $GERMANIUM_BINARIES_FOLDER
+mkdir -p $GERMANIUM_BINARIES_FOLDER
 
 # curl -O is set to download the file, instead of displaying it on the screen.
 #      -L is set to follow redirects, like wget would do.
