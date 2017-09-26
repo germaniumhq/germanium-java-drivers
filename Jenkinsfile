@@ -45,7 +45,7 @@ stage("Build and Test germanium-drivers") {
             ],
             name: name,
             privileged: true,
-            command: "/scripts/test-drivers.sh"
+            command: "bash -l -c /scripts/test-drivers.sh"
     }
 }
 
@@ -66,7 +66,7 @@ stage("Install into local Nexus") {
                 "nexus:nexus"
             ],
             remove: true,
-            command: "/scripts/release-nexus.sh"
+            command: "bash -l -c /scripts/release-nexus.sh"
     }
 }
 
