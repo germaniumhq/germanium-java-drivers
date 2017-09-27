@@ -10,20 +10,29 @@ properties([
     ])
 ])
 
+
+
 stage("Build Germanium Java Drivers") {
     node {
-        deleteDir()
+        withCredentials([file(credentialsId: 'NEXUS_SETTINGS_XML', variable: 'NEXUS_SETTINGS_XML')]) {
+            deleteDir()
 
-        checkout scm
+            checkout scm
 
-        dockerBuild(file: './jenkins/Dockerfile.java8.build',
-            build_args: [
-                "http_proxy=http://${LOCAL_PROXY}",
-                "https_proxy=http://${LOCAL_PROXY}",
-                "ftp_proxy=http://${LOCAL_PROXY}"
-            ],
-            tags: ['germanium_drivers_java8']
-        )
+            sh """
+                cp ${env.NEXUS_SETTINGS_XML} /tmp/NEXUS_SETTINGS_XML
+                chmod 666 ./jenkins/scripts/settings.xml
+            """
+
+            dockerBuild(file: './jenkins/Dockerfile.java8.build',
+                build_args: [
+                    "http_proxy=http://${LOCAL_PROXY}",
+                    "https_proxy=http://${LOCAL_PROXY}",
+                    "ftp_proxy=http://${LOCAL_PROXY}"
+                ],
+                tags: ['germanium_drivers_java8']
+            )
+        }
     }
 }
 
