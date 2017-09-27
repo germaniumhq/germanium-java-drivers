@@ -20,7 +20,7 @@ stage("Build Germanium Java Drivers") {
             checkout scm
 
             sh """
-                cp ${env.NEXUS_SETTINGS_XML} /tmp/NEXUS_SETTINGS_XML
+                cp ${env.NEXUS_SETTINGS_XML} ./jenkins/scripts/settings.xml
                 chmod 666 ./jenkins/scripts/settings.xml
             """
 
