@@ -1,3 +1,3 @@
-cd /src
-mvn deploy
+cd /home/ciplogic/project
+mvn deploy -DskipTests
 
