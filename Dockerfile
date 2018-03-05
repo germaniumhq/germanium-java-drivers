@@ -1,0 +1,2 @@
+FROM germaniumhq/maven-build
+
