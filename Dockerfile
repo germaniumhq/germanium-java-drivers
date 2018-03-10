@@ -1,2 +1,1 @@
 FROM germaniumhq/maven-build
-
