@@ -5,7 +5,7 @@ set -e
 #############################################################################
 # Install firefox
 #############################################################################
-FIREFOX_VERSION=47.0.1
+FIREFOX_VERSION=57.0
 
 apt-get update -qqy \
   && apt-get -qqy --no-install-recommends install firefox \
