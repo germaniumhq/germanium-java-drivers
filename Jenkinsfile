@@ -39,7 +39,6 @@ stage('Build Drivers') {
         ]
 
         dockerBuild file: './Dockerfile',
-            networks: ['vnc'],
             no_cache: CLEAR_DOCKER_CACHE,
             tags: ['germanium_drivers:java']
 
