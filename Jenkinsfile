@@ -34,24 +34,30 @@ stage('Build Drivers') {
 
         checkout scm
 
+        dockerRm containers: [
+            'germanium_drivers_ok'
+        ]
+
         dockerBuild file: './Dockerfile',
             networks: ['vnc'],
             no_cache: CLEAR_DOCKER_CACHE,
             tags: ['germanium_drivers:java']
 
         dockerRun image: 'germanium_drivers:java',
+            name: 'germanium_drivers_ok',
             privileged: true,
-            remove: true,
+            remove: false,
             env: [
                 'DISPLAY=vnc-server:0',
                 "MAVEN_EXTRA_PARAMETERS=${mavenExtraParameters}"
             ],
-            links: [
-                'vnc-server:vnc-server'
-            ],
+            networks: ['vnc'],
             volumes: [
                 '/dev/shm:/dev/shm:rw'
             ]
+
+        dockerCommit name: 'germanium_drivers_ok',
+            image: 'germanium_drivers_ok:java'
     }
 }
 
