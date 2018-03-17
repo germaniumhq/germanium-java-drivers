@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-GERMANIUM_FOLDER=$(readlink -f $(dirname $0)/..)
+GERMANIUM_FOLDER=$(readlink -f $(dirname $0)/../..)
 
 set -x
 set -e
 
-. $GERMANIUM_FOLDER/bin/driver_versions
+. $GERMANIUM_FOLDER/_gbs/bin/driver_versions
 
 GERMANIUM_BINARIES_FOLDER="$GERMANIUM_FOLDER/src/main/resources/binary"
 

@@ -25,7 +25,7 @@ if (!RUN_CHROME_TESTS) {
 
 def mavenExtraParameters = ""
 if (cucumberOptions != "") {
-    mavenExtraParameters = "\"-Dcucumber.options=${cucumberOptions.trim()}\""
+    mavenExtraParameters = "-Dcucumber.options='${cucumberOptions.trim()}'"
 }
 
 stage('Build Drivers') {
