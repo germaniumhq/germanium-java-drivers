@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-GERMANIUM_FOLDER=$(readlink -f $(dirname $0)/../..)
+GERMANIUM_FOLDER=$(readlink -f $(dirname $0)/../../..)
+CURRENT_FOLDER=$(readlink -f "$(dirname "$0")")
 
 set -x
 set -e
 
-. $GERMANIUM_FOLDER/_gbs/bin/driver_versions
+. $CURRENT_FOLDER/driver_versions
 
 GERMANIUM_BINARIES_FOLDER="$GERMANIUM_FOLDER/src/main/resources/binary"
 
@@ -71,5 +72,4 @@ cd $GERMANIUM_BINARIES_FOLDER/ie/win/32
 unzip /tmp/germaniumdrivers/IEDriverServer_Win32_$IEDRIVER_VERSION.zip
 cd $GERMANIUM_BINARIES_FOLDER/ie/win/64
 unzip /tmp/germaniumdrivers/IEDriverServer_x64_$IEDRIVER_VERSION.zip
-
 
