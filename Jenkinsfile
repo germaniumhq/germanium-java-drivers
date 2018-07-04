@@ -1,68 +1,78 @@
 
 properties([
-    parameters([
-        string(name: 'LOCAL_PROXY',
-               defaultValue: '172.17.0.1:3128',
-               description: 'Squid proxy to use for fetching resources'),
-        string(name: 'DRIVERS_SOURCES_URL',
-               defaultValue: 'http://192.168.0.2:10080/germanium/germanium-java-drivers.git',
-               description: 'Location for the drivers sources.')
+    safeParameters(this, [
+        string(name: 'IMAGE_NAME', defaultValue: '',
+                description: 'Container image name. By default it is ge-drivers-<uid>'),
+        booleanParam(name: 'RUN_FIREFOX_TESTS', defaultValue: true,
+                description: 'Should the firefox tests run'),
+        booleanParam(name: 'RUN_CHROME_TESTS', defaultValue: true,
+                description: 'Should the chrome tests run')
+    ]),
+
+    pipelineTriggers([
+        upstream(
+            threshold: 'SUCCESS',
+            upstreamProjects: '/build-system/germaniumhq-java-build-system/master'
+        )
     ])
 ])
 
+safeParametersCheck(this)
 
-
-stage("Build Germanium Java Drivers") {
-    node {
-        withCredentials([file(credentialsId: 'NEXUS_SETTINGS_XML', variable: 'NEXUS_SETTINGS_XML')]) {
+stage("Build Germanium Drivers") {
+    parallel 'Java 8': {
+        node {
             deleteDir()
-
             checkout scm
 
-            sh """
-                cp ${env.NEXUS_SETTINGS_XML} ./jenkins/scripts/settings.xml
-                chmod 666 ./jenkins/scripts/settings.xml
-            """
+            versionManager("-l ./version_values.yml")
 
-            dockerBuild(file: './jenkins/Dockerfile.java8.build',
-                build_args: [
-                    "http_proxy=http://${LOCAL_PROXY}",
-                    "https_proxy=http://${LOCAL_PROXY}",
-                    "ftp_proxy=http://${LOCAL_PROXY}"
-                ],
-                tags: ['germanium_drivers_java8']
-            )
+            docker.build('germanium_drivers_java8',
+                         '-f Dockerfile .')
         }
     }
 }
 
-def name = 'ge-drivers-java-' + getGuid()
-//def name = 'ge-drivers-java-b64f4dbe-830d-4a2d-88ba-44b478b86cf0'
-
-print "Building container with name: ${name}"
-
-stage("Build and Test germanium-drivers") {
-    node {
-        dockerRun image: 'germanium_drivers_java8',
-            env: [
-                "DISPLAY=vnc:0",
-                "SOURCES_URL=${DRIVERS_SOURCES_URL}",
-            ],
-            links: [
-                "nexus:nexus",
-                "vnc-server:vnc"
-            ],
-            name: name,
-            privileged: true,
-            command: "bash -l -c /scripts/test-drivers.sh"
-    }
+// -------------------------------------------------------------------
+// container name definition
+// -------------------------------------------------------------------
+def name
+if (params.IMAGE_NAME) {
+    name = 'ge-java-drivers-' + params.IMAGE_NAME
+} else {
+    name = 'ge-java-drivers-' + getGuid()
 }
 
-stage("Commit Image") {
-    node {
-        sh """
-            docker commit ${name} ${name}
-        """
+println "Building container with name: ${name}"
+
+stage("Test germanium-drivers") {
+    parallel 'Java 8 Tests': {
+        node {
+            dockerRm containers: [name]
+            dockerInside image: 'germanium_drivers_java8',
+                env: [
+                    "DISPLAY=vnc:0"
+                ],
+                links: [
+                    "vnc-server:vnc"
+                ],
+                name: name,
+                privileged: true,
+                volumes: [
+                    '/dev/shm:/dev/shm:rw'
+                ],
+                code: {
+                    junitReports("/src/target/surefire-reports") {
+                        sh """
+                            cd /src
+                            . bin/prepare_firefox.sh
+                            mvn install
+                        """
+
+                        dockerCommit name: name, image: name
+                    }
+                }
+        }
     }
 }
 
@@ -70,12 +80,32 @@ stage("Install into local Nexus") {
     input message: 'Install into local Nexus?'
 
     node {
-        dockerRun image: name,
+        dockerInside image: name,
             links: [
-                "nexus:nexus"
+                'nexus:nexus'
             ],
-            remove: true,
-            command: "bash -l -c /scripts/release-nexus.sh"
+            code: {
+                withCredentials([file(credentialsId: 'NEXUS_SETTINGS_XML',
+                                      variable: 'NEXUS_SETTINGS_XML')]) {
+                    sh """
+                        cp ${env.NEXUS_SETTINGS_XML} /germanium/.m2/settings.xml
+                        chmod 666 /germanium/.m2/settings.xml
+
+                        /src/bin/release_nexus.sh
+                    """
+                }
+            }
+    }
+}
+
+stage("Install into global PyPI") {
+    input message: 'Install into global PyPI?'
+
+    node {
+        dockerInside image: name,
+            code: {
+                sh "/src/bin/release.sh"
+            }
     }
 }
 
