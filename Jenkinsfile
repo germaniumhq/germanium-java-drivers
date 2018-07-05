@@ -66,10 +66,8 @@ stage("Test germanium-drivers") {
                         sh """
                             cd /src
                             . bin/prepare_firefox.sh
-                            mvn install
+                            mvn test
                         """
-
-                        dockerCommit name: name, image: name
                     }
                 }
         }
