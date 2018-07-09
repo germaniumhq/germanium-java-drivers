@@ -1,4 +1,3 @@
-
 properties([
     safeParameters(this, [
         string(name: 'IMAGE_NAME', defaultValue: '',
