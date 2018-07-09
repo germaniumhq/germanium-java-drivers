@@ -51,7 +51,7 @@ public class DriverRegistry {
                     return raiseUnknownBrowser(platform, browser);
                 }
             } else if (platform.getOperatingSystem() == OperatingSystem.MAC) {
-                return "binary/chrome/mac/32/chromedriver";
+                return "binary/chrome/mac/64/chromedriver";
             } else if (platform.getOperatingSystem() == OperatingSystem.WINDOWS) {
                 return "binary/chrome/win/32/chromedriver.exe";
             } else {
